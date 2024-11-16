@@ -16,9 +16,6 @@
             align-items: center;
         }
 
-        h1 {
-            margin: 20px;
-        }
 
         .map-container {
             width: 100%;
@@ -29,6 +26,7 @@
         svg {
             width: 100%;
             height: auto;
+            scale:1.2;
         }
 
         path {
@@ -38,7 +36,6 @@
 </head>
 
 <body>
-    <h1>Interactive SVG Map</h1>
     <div class="map-container">
         <?xml version="1.0"?>
         <!--
@@ -1569,7 +1566,7 @@ THE SOFTWARE.
                     continentMap[continent].forEach(continentCountryId => {
                         const continentPaths = document.querySelectorAll(`#${continentCountryId}, .${continentCountryId}`);
                         continentPaths.forEach(path => {
-                            path.style.fill = 'lightblue'; // Highlight all countries in the same continent
+                            path.style.fill = '#36454F'; // Highlight all countries in the same continent
                         });
                     });
                 }
