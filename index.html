@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="styles.css">
     <style>
         body {
-            font-family: montserrat;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding:0;
             display: flex;
@@ -36,20 +36,35 @@
 
 
 
-    /* Stil za tooltip */
+.tooltip {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 0.5em; /* Koristimo em za fleksibilne veličine */
+    border-radius: 0.25em;
+    font-size: 1rem; /* Koristimo rem za skaliranje */
+    pointer-events: none;
+    z-index: 1000;
+    display: none;
+    max-width: 90%; /* Ograničava širinu tooltipa */
+    word-wrap: break-word; /* Prelomi tekst na novu liniju ako je predugačak */
+}
+
+
+
+@media (max-width: 768px) {
     .tooltip {
-        position: absolute;
-        background-color: rgba(0, 0, 0, 0.8);
-        color: white;
-        padding: 8px;
-        border-radius: 4px;
-        font-size: 14px;
-        pointer-events: none;
-        z-index: 1000;
-        display: none;
+        font-size: 0.875rem; /* Smanjimo font na manjim ekranima */
+        padding: 0.4em; /* Smanjimo padding */
     }
+}
 
-
+@media (max-width: 480px) {
+    .tooltip {
+        font-size: 0.75rem; /* Još manji font za vrlo male ekrane */
+        max-width: 80%; /* Dodatno ograničavanje širine */
+    }
+}
 
 
 
