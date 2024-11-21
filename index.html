@@ -32,6 +32,26 @@
         path {
             transition: fill 0.3s ease;
         }
+		
+
+
+
+    /* Stil za tooltip */
+    .tooltip {
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 8px;
+        border-radius: 4px;
+        font-size: 14px;
+        pointer-events: none;
+        z-index: 1000;
+        display: none;
+    }
+
+
+
+
 
     </style>
 </head>
@@ -39,6 +59,8 @@
 <body>
 
     <div class="map-container">
+
+<div id="tooltip" class="tooltip"></div>
         <?xml version="1.0"?>
         <!--
 *************Map created by Simplemaps.com********************		
@@ -1534,85 +1556,88 @@ THE SOFTWARE.
             </circle>
         </svg>
     </div>
-    <script>
-        const continentMap = {
-            Africa: [
-                "DZ", "AO", "BJ", "BW", "BF", "BI", "CM", "CV", "CF", "TD", "KM", "CG", "CD", "DJ", "EG", "GQ", "ER",
-                "ET", "GA", "GM", "GH", "GN", "GW", "CI", "KE", "LS", "LR", "LY", "MG", "MW", "ML", "MR", "MU", "MA",
-                "MZ", "NA", "NE", "NG", "RW", "ST", "SN", "SC", "SL", "SO", "ZA", "SS", "SD", "TZ", "TG", "TN", "UG",
-                "EH", "ZM", "ZW", "Angola",
-            ],
-            Europe: [
-                "AL", "AD", "AT", "BY", "BE", "BA", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "GE", "DE", "GR",
-                "HU", "IS", "IE", "IT", "XK", "LV", "LI", "LT", "LU", "MT", "MD", "MC", "ME", "NL", "MK", "NO", "PL",
-                "PT", "RO", "RU", "SM", "RS", "SK", "SI", "ES", "SE", "CH", "UA", "GB", "VA",
-                "Italy", "ItalyPath1", "ItalyPath2", "ItalyPath3", "Greece", "United Kingdom", "France", "Norway", "Denmark", "UK",
-            ],
-            NorthAmerica: [
-                "AG", "BS", "BB", "BZ", "CA", "CR", "CU", "DM", "DO", "SV", "GD", "GT", "HT", "HN", "JM", "MX", "NI",
-                "PA", "KN", "LC", "VC", "TT", "US", "Mexico", "United States", "Canada", "United States Virgin Islands", "United States", "United States Of America", "Alaska",
-            ],
-        };
-        // When you hover over a country, find all paths associated with that country
-        function handleHover(countryId) {
-            // Get all country paths for the hovered country (only if it's in the continentMap)
-            if (!isCountryInMap(countryId)) return;
-            const countryPaths = document.querySelectorAll(`#${countryId}, .${countryId}`);
-            countryPaths.forEach(path => {
-                path.style.fill = 'lightblue'; // Change the fill color of the country
-            });
+<script>
+    const continentInfo = {
+        Africa: "Africa is known for its vast deserts, rich cultures, and diverse wildlife.",
+        Europe: "Europe is famous for its historical landmarks, art, and modern innovations.",
+        NorthAmerica: "North America is renowned for its natural wonders, cultural diversity, and economic power."
+    };
 
-            // Find the continent of the hovered country and highlight all countries in that continent
-            for (const continent in continentMap) {
-                if (continentMap[continent].includes(countryId)) {
-                    continentMap[continent].forEach(continentCountryId => {
-                        const continentPaths = document.querySelectorAll(`#${continentCountryId}, .${continentCountryId}`);
-                        continentPaths.forEach(path => {
-                            path.style.fill = '#36454F'; // Highlight all countries in the same continent
-                        });
-                    });
-                }
+    const continentMap = {
+        Africa: [
+            "DZ", "AO", "BJ", "BW", "BF", "BI", "CM", "CV", "CF", "TD", "KM", "CG", "CD", "DJ", "EG", "GQ", "ER",
+            "ET", "GA", "GM", "GH", "GN", "GW", "CI", "KE", "LS", "LR", "LY", "MG", "MW", "ML", "MR", "MU", "MA",
+            "MZ", "NA", "NE", "NG", "RW", "ST", "SN", "SC", "SL", "SO", "ZA", "SS", "SD", "TZ", "TG", "TN", "UG",
+            "EH", "ZM", "ZW", "Angola",
+        ],
+        Europe: [
+            "AL", "AD", "AT", "BY", "BE", "BA", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "GE", "DE", "GR",
+            "HU", "IS", "IE", "IT", "XK", "LV", "LI", "LT", "LU", "MT", "MD", "MC", "ME", "NL", "MK", "NO", "PL",
+            "PT", "RO", "RU", "SM", "RS", "SK", "SI", "ES", "SE", "CH", "UA", "GB", "VA",
+            "Italy", "ItalyPath1", "ItalyPath2", "ItalyPath3", "Greece", "United Kingdom", "France", "Norway", "Denmark", "UK",
+        ],
+        NorthAmerica: [
+            "AG", "BS", "BB", "BZ", "CA", "CR", "CU", "DM", "DO", "SV", "GD", "GT", "HT", "HN", "JM", "MX", "NI",
+            "PA", "KN", "LC", "VC", "TT", "US", "Mexico", "United States", "Canada", "United States Virgin Islands", "United States", "United States Of America", "Alaska",
+        ],
+    };
+
+    const tooltip = document.getElementById('tooltip');
+
+    function handleHover(countryId, event) {
+        if (!isCountryInMap(countryId)) return;
+
+        // Highlight the hovered country and continent
+        const countryPaths = document.querySelectorAll(`#${countryId}, .${countryId}`);
+        countryPaths.forEach(path => path.style.fill = 'black');
+
+        for (const continent in continentMap) {
+            if (continentMap[continent].includes(countryId)) {
+                continentMap[continent].forEach(continentCountryId => {
+                    const continentPaths = document.querySelectorAll(`#${continentCountryId}, .${continentCountryId}`);
+                    continentPaths.forEach(path => path.style.fill = 'black');
+                });
+
+                // Show tooltip with continent info
+                tooltip.style.display = 'block';
+                tooltip.innerText = `${continent}: ${continentInfo[continent]}`;
+                tooltip.style.left = `${event.pageX + 10}px`;
+                tooltip.style.top = `${event.pageY + 10}px`;
+            }
+        }
+    }
+
+    function handleMouseOut(countryId) {
+        if (!isCountryInMap(countryId)) return;
+
+        const countryPaths = document.querySelectorAll(`#${countryId}, .${countryId}`);
+        countryPaths.forEach(path => path.style.fill = '');
+
+        for (const continent in continentMap) {
+            if (continentMap[continent].includes(countryId)) {
+                continentMap[continent].forEach(continentCountryId => {
+                    const continentPaths = document.querySelectorAll(`#${continentCountryId}, .${continentCountryId}`);
+                    continentPaths.forEach(path => path.style.fill = '');
+                });
             }
         }
 
-        // When hover ends, reset the background color for all paths
-        function handleMouseOut(countryId) {
-            // Get all country paths for the hovered country and reset the background color
-            if (!isCountryInMap(countryId)) return;
+        // Hide tooltip
+        tooltip.style.display = 'none';
+    }
 
-            const countryPaths = document.querySelectorAll(`#${countryId}, .${countryId}`);
-            countryPaths.forEach(path => {
-                path.style.fill = ''; // Reset to default fill color
-            });
+    function isCountryInMap(countryId) {
+        return Object.values(continentMap).some(countries => countries.includes(countryId));
+    }
 
-            // Reset the background color for all countries in the continent
-            for (const continent in continentMap) {
-                if (continentMap[continent].includes(countryId)) {
-                    continentMap[continent].forEach(continentCountryId => {
-                        const continentPaths = document.querySelectorAll(`#${continentCountryId}, .${continentCountryId}`);
-                        continentPaths.forEach(path => {
-                            path.style.fill = ''; // Reset to default fill color
-                        });
-                    });
-                }
-            }
+    document.querySelectorAll('path').forEach(path => {
+        const countryId = path.id || path.classList[0];
+        if (isCountryInMap(countryId)) {
+            path.addEventListener('mouseover', (event) => handleHover(countryId, event));
+            path.addEventListener('mouseout', () => handleMouseOut(countryId));
         }
-
-        // Check if the countryId exists in the continentMap
-        function isCountryInMap(countryId) {
-            // Check if countryId is either an id or a class name in the continent map
-            return Object.values(continentMap).some(countries => countries.includes(countryId));
-        }
-
-        // Set up event listeners for each country path, but only for countries listed in the continentMap
-        document.querySelectorAll('path').forEach(path => {
-            const countryId = path.id || path.classList[0]; // Use id or class (first class) as country ID
-            if (isCountryInMap(countryId)) {
-                path.addEventListener('mouseover', () => handleHover(countryId));
-                path.addEventListener('mouseout', () => handleMouseOut(countryId));
-            }
-        });
-    </script>
+    });
+</script>
 </body>
 
 </html>
