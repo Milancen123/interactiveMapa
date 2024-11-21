@@ -67,9 +67,7 @@
         font-size: 0.675rem; /* Smanjimo font na manjim ekranima */
         padding: 0.4em; /* Smanjimo padding */
     }
-  .map-container{
-	  scale:0.7;
-  }
+
 }
 
 @media (max-width: 480px) {
@@ -77,18 +75,16 @@
         font-size: 0.45rem; /* Još manji font za vrlo male ekrane */
         max-width: 50%; /* Dodatno ograničavanje širine */
     }
-	  .map-container{
-	  scale:0.7;
-  }
+	
 }
 
     </style>
 </head>
 
 <body>
-<div id="tooltip" class="tooltip"></div>
-    <div class="map-container">
 
+    <div class="map-container">
+<div id="tooltip" class="tooltip"></div>
 
         <?xml version="1.0"?>
         <!--
@@ -1587,9 +1583,9 @@ THE SOFTWARE.
     </div>
 <script>
     const continentInfo = {
-        Africa: "Africa is known for its vast deserts, rich cultures, and diverse wildlife.",
-        Europe: "Europe is famous for its historical landmarks, art, and modern innovations.",
-        NorthAmerica: "North America is renowned for its natural wonders, cultural diversity, and economic power."
+        Africa: "Africa is known for its vast deserts",
+        Europe: "Europe is famous for its historical landmarks",
+        NorthAmerica: "North America is renowned for its cultural diversity"
     };
 
     const continentMap = {
