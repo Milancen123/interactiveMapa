@@ -36,36 +36,27 @@
 
 
 
+/* Stil za tooltip */
 .tooltip {
     position: absolute;
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
-    padding: 0.5em; /* Koristimo em za fleksibilne veličine */
-    border-radius: 0.25em;
-    font-size: 1rem; /* Koristimo rem za skaliranje */
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 14px;
     pointer-events: none;
     z-index: 1000;
     display: none;
-    max-width: 90%; /* Ograničava širinu tooltipa */
-    word-wrap: break-word; /* Prelomi tekst na novu liniju ako je predugačak */
+    max-width: 90%; /* Ograničenje širine za manje ekrane */
+    word-wrap: break-word; /* Omogućava prelom teksta */
+    box-sizing: border-box;
 }
 
-
-
-@media (max-width: 768px) {
-    .tooltip {
-        font-size: 0.6rem; /* Smanjimo font na manjim ekranima */
-        padding: 0.6em; /* Smanjimo padding */
-    }
+/* Responsivno pozicioniranje */
+.tooltip[data-show] {
+    display: block;
+    transform: translateX(-50%);
 }
-
-@media (max-width: 480px) {
-    .tooltip {
-        font-size: 0.45rem; /* Još manji font za vrlo male ekrane */
-        max-width: 60%; /* Dodatno ograničavanje širine */
-    }
-}
-
 
 
     </style>
@@ -1616,8 +1607,24 @@ THE SOFTWARE.
                 // Show tooltip with continent info
                 tooltip.style.display = 'block';
                 tooltip.innerText = `${continent}: ${continentInfo[continent]}`;
-                tooltip.style.left = `${event.pageX + 10}px`;
-                tooltip.style.top = `${event.pageY + 10}px`;
+
+                const tooltipRect = tooltip.getBoundingClientRect();
+                const windowWidth = window.innerWidth;
+                const windowHeight = window.innerHeight;
+
+                let left = event.pageX + 10;
+                let top = event.pageY + 10;
+
+                // Adjust position to keep tooltip inside viewport
+                if (left + tooltipRect.width > windowWidth) {
+                    left = windowWidth - tooltipRect.width - 10;
+                }
+                if (top + tooltipRect.height > windowHeight) {
+                    top = windowHeight - tooltipRect.height - 10;
+                }
+
+                tooltip.style.left = `${left}px`;
+                tooltip.style.top = `${top}px`;
             }
         }
     }
@@ -1653,6 +1660,7 @@ THE SOFTWARE.
         }
     });
 </script>
+
 </body>
 
 </html>
