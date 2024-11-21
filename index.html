@@ -47,7 +47,7 @@
     pointer-events: none;
     z-index: 1000;
     display: none;
-    max-width: 90%; /* Ograničenje širine za manje ekrane */
+    max-width: 60%; /* Ograničenje širine za manje ekrane */
     word-wrap: break-word; /* Omogućava prelom teksta */
     box-sizing: border-box;
 }
@@ -55,9 +55,24 @@
 /* Responsivno pozicioniranje */
 .tooltip[data-show] {
     display: block;
-    transform: translateX(-50%);
+    transform: translateX(-60%);
 }
 
+
+
+	    @media (max-width: 768px) {
+    .tooltip {
+        font-size: 0.675rem; /* Smanjimo font na manjim ekranima */
+        padding: 0.4em; /* Smanjimo padding */
+    }
+}
+
+@media (max-width: 480px) {
+    .tooltip {
+        font-size: 0.45rem; /* Još manji font za vrlo male ekrane */
+        max-width: 50%; /* Dodatno ograničavanje širine */
+    }
+}
 
     </style>
 </head>
