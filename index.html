@@ -31,10 +31,52 @@
 	
         }
 
-        path {
-            transition: fill 0.3s ease;
-        }
+      path {
+        transition: transform 0.2s ease;
+    }
+
 		
+
+
+
+
+
+  .dot {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background-color: red;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+    }
+
+    .line {
+        position: absolute;
+        height: 2px;
+        background-color: black;
+        transform-origin: 0 0;
+        pointer-events: none;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1583,45 +1625,66 @@ THE SOFTWARE.
     </div>
 <script>
     const continentInfo = {
-        Africa: "Africa is known for its vast deserts",
-        Europe: "Europe is famous for its historical landmarks",
-        NorthAmerica: "North America is renowned for its cultural diversity"
-    };
+    Africa: "Africa is known for its vast deserts",
+    Europe: "Europe is famous for its historical landmarks",
+    NorthAmerica: "North America is renowned for its cultural diversity",
+    Australia: "Australia is recognized for its unique wildlife and landscapes",
+    Asia: "Asia is known for its rich cultural heritage and diverse geography"
+};
 
-    const continentMap = {
-        Africa: [
-            "DZ", "AO", "BJ", "BW", "BF", "BI", "CM", "CV", "CF", "TD", "KM", "CG", "CD", "DJ", "EG", "GQ", "ER",
-            "ET", "GA", "GM", "GH", "GN", "GW", "CI", "KE", "LS", "LR", "LY", "MG", "MW", "ML", "MR", "MU", "MA",
-            "MZ", "NA", "NE", "NG", "RW", "ST", "SN", "SC", "SL", "SO", "ZA", "SS", "SD", "TZ", "TG", "TN", "UG",
-            "EH", "ZM", "ZW", "Angola",
-        ],
-        Europe: [
-            "AL", "AD", "AT", "BY", "BE", "BA", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "GE", "DE", "GR",
-            "HU", "IS", "IE", "IT", "XK", "LV", "LI", "LT", "LU", "MT", "MD", "MC", "ME", "NL", "MK", "NO", "PL",
-            "PT", "RO", "RU", "SM", "RS", "SK", "SI", "ES", "SE", "CH", "UA", "GB", "VA",
-            "Italy", "ItalyPath1", "ItalyPath2", "ItalyPath3", "Greece", "United Kingdom", "France", "Norway", "Denmark", "UK",
-        ],
-        NorthAmerica: [
-            "AG", "BS", "BB", "BZ", "CA", "CR", "CU", "DM", "DO", "SV", "GD", "GT", "HT", "HN", "JM", "MX", "NI",
-            "PA", "KN", "LC", "VC", "TT", "US", "Mexico", "United States", "Canada", "United States Virgin Islands", "United States", "United States Of America", "Alaska",
-        ],
-    };
+const continentMap = {
+    Africa: [
+        "DZ", "AO", "BJ", "BW", "BF", "BI", "CM", "CV", "CF", "TD", "KM", "CG", "CD", "DJ", "EG", "GQ", "ER",
+        "ET", "GA", "GM", "GH", "GN", "GW", "CI", "KE", "LS", "LR", "LY", "MG", "MW", "ML", "MR", "MU", "MA",
+        "MZ", "NA", "NE", "NG", "RW", "ST", "SN", "SC", "SL", "SO", "ZA", "SS", "SD", "TZ", "TG", "TN", "UG",
+        "EH", "ZM", "ZW", "Angola",
+    ],
+    Europe: [
+        "AL", "AD", "AT", "BY", "BE", "BA", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "GE", "DE", "GR",
+        "HU", "IS", "IE", "IT", "XK", "LV", "LI", "LT", "LU", "MT", "MD", "MC", "ME", "NL", "MK", "NO", "PL",
+        "PT", "RO", "RU", "SM", "RS", "SK", "SI", "ES", "SE", "CH", "UA", "GB", "VA",
+        "Italy", "ItalyPath1", "ItalyPath2", "ItalyPath3", "Greece", "United Kingdom", "France", "Norway", "Denmark", "UK",
+    ],
+    NorthAmerica: [
+        "AG", "BS", "BB", "BZ", "CA", "CR", "CU", "DM", "DO", "SV", "GD", "GT", "HT", "HN", "JM", "MX", "NI",
+        "PA", "KN", "LC", "VC", "TT", "US", "Mexico", "United States", "Canada", "United States Virgin Islands", "United States", "United States Of America", "Alaska",
+    ],
+    Australia: [
+        "AU", "NZ", "FJ", "PG", "SB", "VU", "WS", "TO", "TV", "NR", "KI", "FM", "MH", "PW",
+        "Australia", "New Zealand", "Fiji", "Papua New Guinea", "Solomon Islands", "Vanuatu", "Samoa", "Tonga", "Tuvalu", "Nauru", "Kiribati", "Micronesia", "Marshall Islands", "Palau"
+    ],
+    Asia: [
+        "AF", "AM", "AZ", "BH", "BD", "BT", "BN", "KH", "IN", "ID", "IR", "IQ", "IL", "JP", "JO", "KZ", "KW",
+        "KG", "LA", "LB", "MY", "MV", "MN", "MM", "NP", "OM", "PK", "PH", "QA", "SA", "SG", "KR", "LK", "SY",
+        "TJ", "TH", "TM", "AE", "UZ", "VN", "YE", "HK", "TW", "Israel", "Japan", "India", "Indonesia", "Malaysia",
+        "Thailand", "Vietnam", "Singapore", "Saudi Arabia", "Kazakhstan", "Jordan", "South Korea", "Philippines",
+        "Afghanistan", "Iraq", "Lebanon", "Bhutan", "Nepal", "Iran", "Pakistan", "Syria", "Armenia", "Azerbaijan"
+    ]
+};
 
-    const tooltip = document.getElementById('tooltip');
+   const tooltip = document.getElementById('tooltip');
+    let firstClick = null;
+    let secondClick = null;
+    let lineElement = null;
 
     function handleHover(countryId, event) {
         if (!isCountryInMap(countryId)) return;
 
-        // Highlight the hovered country and continent
+
+        // Scale up the hovered country
+        resetScales();
         const countryPaths = document.querySelectorAll(`#${countryId}, .${countryId}`);
-        countryPaths.forEach(path => path.style.fill = 'black');
+        countryPaths.forEach(path => {
+ path.style.fill = 'black';
+path.style.transform = 'scale(1.02)';});
 
         for (const continent in continentMap) {
             if (continentMap[continent].includes(countryId)) {
-                continentMap[continent].forEach(continentCountryId => {
+continentMap[continent].forEach(continentCountryId => {
                     const continentPaths = document.querySelectorAll(`#${continentCountryId}, .${continentCountryId}`);
                     continentPaths.forEach(path => path.style.fill = 'black');
                 });
+
 
                 // Show tooltip with continent info
                 tooltip.style.display = 'block';
@@ -1667,6 +1730,61 @@ THE SOFTWARE.
         tooltip.style.display = 'none';
     }
 
+    function handleClick(countryId, event) {
+        const { pageX: x, pageY: y } = event;
+
+        if (!firstClick) {
+            // First dot
+            firstClick = { x, y };
+            createDot(x, y);
+        } else if (!secondClick) {
+            // Second dot and line
+            secondClick = { x, y };
+            createDot(x, y);
+            createLine(firstClick.x, firstClick.y, secondClick.x, secondClick.y);
+        } else {
+            // Reset previous dots and line
+            resetDotsAndLine();
+            firstClick = { x, y };
+            secondClick = null;
+            createDot(x, y);
+        }
+    }
+
+    function createDot(x, y) {
+        const dot = document.createElement('div');
+        dot.classList.add('dot');
+        dot.style.left = `${x}px`;
+        dot.style.top = `${y}px`;
+        document.body.appendChild(dot);
+    }
+
+    function createLine(x1, y1, x2, y2) {
+        lineElement = document.createElement('div');
+        lineElement.classList.add('line');
+        const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+        const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
+        lineElement.style.width = `${length}px`;
+        lineElement.style.transform = `rotate(${angle}deg)`;
+        lineElement.style.left = `${x1}px`;
+        lineElement.style.top = `${y1}px`;
+        document.body.appendChild(lineElement);
+    }
+
+    function resetDotsAndLine() {
+        document.querySelectorAll('.dot').forEach(dot => dot.remove());
+        if (lineElement) {
+            lineElement.remove();
+            lineElement = null;
+        }
+    }
+
+    function resetScales() {
+        document.querySelectorAll('path').forEach(path => {
+            path.style.transform = '';
+        });
+    }
+
     function isCountryInMap(countryId) {
         return Object.values(continentMap).some(countries => countries.includes(countryId));
     }
@@ -1676,6 +1794,7 @@ THE SOFTWARE.
         if (isCountryInMap(countryId)) {
             path.addEventListener('mouseover', (event) => handleHover(countryId, event));
             path.addEventListener('mouseout', () => handleMouseOut(countryId));
+            path.addEventListener('click', (event) => handleClick(countryId, event));
         }
     });
 </script>
