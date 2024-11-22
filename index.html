@@ -54,7 +54,7 @@
     .line {
         position: absolute;
         height: 2px;
-        background-color: #43454d;
+        background-color: black;
         transform-origin: 0 0;
         pointer-events: none;
     }
@@ -112,6 +112,31 @@
   }
 
 
+ .reset-button {
+    margin-top: 20px;
+    font-family: 'Montserrat', sans-serif;
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .reset-button:hover {
+    background-color: #333;
+    transform: scale(1.05);
+  }
+
+  .reset-button:active {
+    transform: scale(0.95);
+  }
 
 
 
@@ -1619,6 +1644,7 @@ THE SOFTWARE.
             </circle>
         </svg>
  <div id="placeholder" class="placeholder">Choose a Destination</div>
+<button id="reset-button" class="reset-button">Reset</button>
     </div>
 <script>
     const continentInfo = {
@@ -1798,6 +1824,18 @@ continentMap[continent].forEach(continentCountryId => {
             path.addEventListener('click', (event) => handleClick(countryId, event));
         }
     });
+
+const resetButton = document.getElementById('reset-button');
+
+resetButton.addEventListener('click', () => {
+    // Clear dots and line
+    resetDotsAndLine();
+    // Reset placeholder text
+    placeholder.textContent = "Choose a Destination";
+    // Reset clicks
+    firstClick = null;
+    secondClick = null;
+});
 </script>
 
 </body>
