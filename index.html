@@ -100,6 +100,22 @@
 	
 }
 
+
+
+
+
+  .placeholder {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #555;
+    text-align: center;
+  }
+
+
+
+
+
+
     </style>
 </head>
 
@@ -1602,6 +1618,7 @@ THE SOFTWARE.
             <circle cx="1798.2" cy="719.3" id="2">
             </circle>
         </svg>
+ <div id="placeholder" class="placeholder">Choose a Destination</div>
     </div>
 <script>
     const continentInfo = {
@@ -1641,6 +1658,7 @@ const continentMap = {
         "Afghanistan", "Iraq", "Lebanon", "Bhutan", "Nepal", "Iran", "Pakistan", "Syria", "Armenia", "Azerbaijan"
     ]
 };
+const placeholder = document.getElementById('placeholder');
 
    const tooltip = document.getElementById('tooltip');
     let firstClick = null;
@@ -1711,25 +1729,28 @@ continentMap[continent].forEach(continentCountryId => {
     }
 
     function handleClick(countryId, event) {
-        const { pageX: x, pageY: y } = event;
+    const { pageX: x, pageY: y } = event;
 
-        if (!firstClick) {
-            // First dot
-            firstClick = { x, y };
-            createDot(x, y);
-        } else if (!secondClick) {
-            // Second dot and line
-            secondClick = { x, y };
-            createDot(x, y);
-            createLine(firstClick.x, firstClick.y, secondClick.x, secondClick.y);
-        } else {
-            // Reset previous dots and line
-            resetDotsAndLine();
-            firstClick = { x, y };
-            secondClick = null;
-            createDot(x, y);
-        }
+    if (!firstClick) {
+        // First dot
+        firstClick = { x, y };
+        createDot(x, y);
+        placeholder.textContent = "Choose Your End Destination";
+    } else if (!secondClick) {
+        // Second dot and line
+        secondClick = { x, y };
+        createDot(x, y);
+        createLine(firstClick.x, firstClick.y, secondClick.x, secondClick.y);
+        placeholder.textContent = "Choose a Destination"; // Reset placeholder
+    } else {
+        // Reset previous dots and line
+        resetDotsAndLine();
+        firstClick = { x, y };
+        secondClick = null;
+        createDot(x, y);
+        placeholder.textContent = "Choose Your End Destination"; // Reset placeholder
     }
+}
 
     function createDot(x, y) {
         const dot = document.createElement('div');
