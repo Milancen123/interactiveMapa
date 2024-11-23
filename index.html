@@ -1667,8 +1667,8 @@ THE SOFTWARE.
         </svg>
  <div id="placeholder" class="placeholder">Choose a Destination</div>
 	    <div class = "flexContainer">
-		<div id="start-location" class="placeholder"><span id="start">Start Location:</span> None</div>
-		<div id="end-location" class="placeholder"><span id="end">End Location:</span> None</div>
+		<div id="start-location" class="placeholder"><img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> None</div>
+		<div id="end-location" class="placeholder"><img src="crveni_tag.png" width="16px" id="zeleni_tag"/> None</div>
 	    </div>
 
 <button id="reset-button" class="reset-button">Reset</button>
@@ -1780,14 +1780,14 @@ function handleClick(countryId, event) {
         // First click: Set start location
         firstClick = { x, y, countryName };
         createLocationTag(x, y, "Start");
-        startLocation.innerHTML = `<span id="start">Start Location:</span> ${countryName}`;
+        startLocation.innerHTML = `<img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> ${countryName}`;
         placeholder.textContent = "Choose Your End Destination";
     } else if (!secondClick) {
         // Second click: Set end location
         secondClick = { x, y, countryName };
         createLocationTag(x, y, "End");
         createLine(firstClick.x, firstClick.y, secondClick.x, secondClick.y);
-        endLocation.innerHTML = `<span id="end">End Location:</span> ${countryName}`;
+        endLocation.innerHTML = `<img src="crveni_tag.png" width="16px" id="zeleni_tag"/> ${countryName}`;
         placeholder.textContent = "Choose a Destination";
     } else {
         // Third click: Reset and set new start location
@@ -1795,8 +1795,8 @@ function handleClick(countryId, event) {
         firstClick = { x, y, countryName };
         secondClick = null;
         createLocationTag(x, y, "Start");
-        startLocation.innnerHTML = `<span id="start">Start Location:</span> ${countryName}`;
-        endLocation.innerHTML = `<span id="end">End Location:</span> None`;
+        startLocation.innnerHTML = `<img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> ${countryName}`;
+        endLocation.innerHTML = `<img src="crveni_tag.png" width="16px" id="zeleni_tag"/> None`;
         placeholder.textContent = "Choose Your End Destination";
     }
 }
@@ -1899,8 +1899,8 @@ resetButton.addEventListener("click", () => {
     resetDotsAndLine();
     firstClick = null;
     secondClick = null;
-    startLocation.innerHTML = `<span id="start">Start Location:</span> None`;
-    endLocation.innerHTML = `<span id="end">End Location:</span> None`;
+    startLocation.innerHTML = `<img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> None`;
+    endLocation.innerHTML = `<img src="crveni_tag.png" width="16px" id="zeleni_tag"/> None`;
     placeholder.textContent = "Choose a Destination";
 });
 
