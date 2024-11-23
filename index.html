@@ -21,7 +21,7 @@
             width: 100%;
             max-width: 1000px;
             margin: 0 auto;
-            margin-top:60px;
+            margin-top:40px;
 		
         }
 
@@ -36,6 +36,13 @@
     }
 
 		
+
+.flexContainer{
+	display:flex;
+	width:100%;
+	justify-content:center;
+	gap:10%;
+}
 
 
 
@@ -105,7 +112,7 @@
 
 
   .placeholder {
-    margin-top: 10px;
+    margin-top: 5px;
     font-size: 18px;
     color: #1a1b1f;
     text-align: center;
@@ -113,7 +120,7 @@
 
 
  .reset-button {
-    margin-top: 10px;
+    margin-top: 5px;
     font-family: 'Montserrat', sans-serif;
     background-color: #1a1b1f;
     color: white;
@@ -138,6 +145,12 @@
     transform: scale(0.95);
   }
 
+#end-location{
+	width:200px;
+}
+#start-location{
+	width:200px;
+}
 
 
 
@@ -1644,9 +1657,9 @@ THE SOFTWARE.
             </circle>
         </svg>
  <div id="placeholder" class="placeholder">Choose a Destination</div>
-	    <div>
-		<span id="start-location" class="placeholder">Start Location: None</span>
-		<span id="end-location" class="placeholder">End Location: None</span>
+	    <div class = "flexContainer">
+		<div id="start-location" class="placeholder">Start Location: None</div>
+		<div id="end-location" class="placeholder">End Location: None</div>
 	    </div>
 
 <button id="reset-button" class="reset-button">Reset</button>
