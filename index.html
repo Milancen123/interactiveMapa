@@ -1899,8 +1899,8 @@ resetButton.addEventListener("click", () => {
     resetDotsAndLine();
     firstClick = null;
     secondClick = null;
-    startLocation.textContent = "Start Location: None";
-    endLocation.textContent = "End Location: None";
+    startLocation.textContent = `<span id="start">Start Location:</span> None`;
+    endLocation.textContent = `<span id="end">End Location:</span> None`;
     placeholder.textContent = "Choose a Destination";
 });
 
