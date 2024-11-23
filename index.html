@@ -1779,14 +1779,14 @@ function handleClick(countryId, event) {
         // First click: Set start location
         firstClick = { x, y, countryName };
         createLocationTag(x, y, "Start");
-        startLocation.textContent = `<span id="start">Start Location:</span> ${countryName}`;
+        startLocation.innerHTML = `<span id="start">Start Location:</span> ${countryName}`;
         placeholder.textContent = "Choose Your End Destination";
     } else if (!secondClick) {
         // Second click: Set end location
         secondClick = { x, y, countryName };
         createLocationTag(x, y, "End");
         createLine(firstClick.x, firstClick.y, secondClick.x, secondClick.y);
-        endLocation.textContent = `<span id="end">End Location:</span> ${countryName}`;
+        endLocation.innerHTML = `<span id="end">End Location:</span> ${countryName}`;
         placeholder.textContent = "Choose a Destination";
     } else {
         // Third click: Reset and set new start location
@@ -1794,8 +1794,8 @@ function handleClick(countryId, event) {
         firstClick = { x, y, countryName };
         secondClick = null;
         createLocationTag(x, y, "Start");
-        startLocation.textContent = `<span id="start">Start Location:</span> ${countryName}`;
-        endLocation.textContent = `<span id="end">End Location:</span> None`;
+        startLocation.innnerHTML = `<span id="start">Start Location:</span> ${countryName}`;
+        endLocation.innerHTML = `<span id="end">End Location:</span> None`;
         placeholder.textContent = "Choose Your End Destination";
     }
 }
