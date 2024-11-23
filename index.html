@@ -1768,11 +1768,12 @@ function handleClick(countryId, event) {
 
     // Try to get the name attribute
     let countryName = pathElement.getAttribute("name");
-    
     // If name attribute is not present, fallback to the class name or id
     if (!countryName) {
         countryName = pathElement.className.baseVal || pathElement.id || "Unknown Country";
     }
+
+    console.log(countryName);
 
     const { pageX: x, pageY: y } = event;
 
@@ -1795,7 +1796,7 @@ function handleClick(countryId, event) {
         firstClick = { x, y, countryName };
         secondClick = null;
         createLocationTag(x, y, "Start");
-        startLocation.innnerHTML = `<img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> ${countryName}`;
+        startLocation.innerHTML = `<img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> ${countryName}`;
         endLocation.innerHTML = `<img src="crveni_tag.png" width="16px" id="zeleni_tag"/> None`;
         placeholder.textContent = "Choose Your End Destination";
     }
