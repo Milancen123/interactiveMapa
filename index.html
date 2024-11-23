@@ -116,9 +116,16 @@
     font-size: 18px;
     color: #1a1b1f;
     text-align: center;
-    font-weight: bold;
   }
-
+#placeholder{
+	font-weight:bold;
+}
+#start{
+	font-weight:bold;
+}
+#end{
+	font-weight:bold;
+}
 
  .reset-button {
     margin-top: 5px;
@@ -1659,8 +1666,8 @@ THE SOFTWARE.
         </svg>
  <div id="placeholder" class="placeholder">Choose a Destination</div>
 	    <div class = "flexContainer">
-		<div id="start-location" class="placeholder">Start Location: None</div>
-		<div id="end-location" class="placeholder">End Location: None</div>
+		<div id="start-location" class="placeholder"><span id="start">Start Location:</span> None</div>
+		<div id="end-location" class="placeholder"><span id="end">End Location:</span> None</div>
 	    </div>
 
 <button id="reset-button" class="reset-button">Reset</button>
