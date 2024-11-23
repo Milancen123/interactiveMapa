@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="styles.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Montserrat';
             margin: 0;
             padding:0;
             display: flex;
@@ -107,7 +107,7 @@
   .placeholder {
     margin-top: 20px;
     font-size: 18px;
-    color: #555;
+    color: #1a1b1f;
     text-align: center;
   }
 
@@ -1644,6 +1644,8 @@ THE SOFTWARE.
             </circle>
         </svg>
  <div id="placeholder" class="placeholder">Choose a Destination</div>
+<div id="start-location" class="placeholder">Start Location: None</div>
+<div id="end-location" class="placeholder">End Location: None</div>
 <button id="reset-button" class="reset-button">Reset</button>
     </div>
 <script>
@@ -1684,159 +1686,207 @@ const continentMap = {
         "Afghanistan", "Iraq", "Lebanon", "Bhutan", "Nepal", "Iran", "Pakistan", "Syria", "Armenia", "Azerbaijan"
     ]
 };
-const placeholder = document.getElementById('placeholder');
+const placeholder = document.getElementById("placeholder");
+const startLocation = document.getElementById("start-location");
+const endLocation = document.getElementById("end-location");
+const resetButton = document.getElementById("reset-button");
 
-   const tooltip = document.getElementById('tooltip');
-    let firstClick = null;
-    let secondClick = null;
-    let lineElement = null;
+let firstClick = null;
+let secondClick = null;
+let lineElement = null;
 
-    function handleHover(countryId, event) {
-        if (!isCountryInMap(countryId)) return;
+function handleHover(countryId, event) {
+    if (!isCountryInMap(countryId)) return;
 
+    resetScales();
+    const countryPaths = getPathsByCountryId(countryId);
 
-        // Scale up the hovered country
-        resetScales();
-        const countryPaths = document.querySelectorAll(`#${countryId}, .${countryId}`);
-        countryPaths.forEach(path => {
- path.style.fill = 'black';
-path.style.transform = 'scale(1.02)';});
+    countryPaths.forEach(path => {
+        path.style.fill = "black";
+        path.style.transform = "scale(1.008)";
+    });
 
-        for (const continent in continentMap) {
-            if (continentMap[continent].includes(countryId)) {
-continentMap[continent].forEach(continentCountryId => {
-                    const continentPaths = document.querySelectorAll(`#${continentCountryId}, .${continentCountryId}`);
-                    continentPaths.forEach(path => path.style.fill = 'black');
-                });
-
-
-                // Show tooltip with continent info
-                tooltip.style.display = 'block';
-                tooltip.innerText = `${continent}: ${continentInfo[continent]}`;
-
-                const tooltipRect = tooltip.getBoundingClientRect();
-                const windowWidth = window.innerWidth;
-                const windowHeight = window.innerHeight;
-
-                let left = event.pageX + 10;
-                let top = event.pageY + 10;
-
-                // Adjust position to keep tooltip inside viewport
-                if (left + tooltipRect.width > windowWidth) {
-                    left = windowWidth - tooltipRect.width - 10;
-                }
-                if (top + tooltipRect.height > windowHeight) {
-                    top = windowHeight - tooltipRect.height - 10;
-                }
-
-                tooltip.style.left = `${left}px`;
-                tooltip.style.top = `${top}px`;
-            }
+    for (const continent in continentMap) {
+        if (continentMap[continent].includes(countryId)) {
+            displayTooltip(event, continent);
+            highlightContinent(continent);
         }
-    }
-
-    function handleMouseOut(countryId) {
-        if (!isCountryInMap(countryId)) return;
-
-        const countryPaths = document.querySelectorAll(`#${countryId}, .${countryId}`);
-        countryPaths.forEach(path => path.style.fill = '');
-
-        for (const continent in continentMap) {
-            if (continentMap[continent].includes(countryId)) {
-                continentMap[continent].forEach(continentCountryId => {
-                    const continentPaths = document.querySelectorAll(`#${continentCountryId}, .${continentCountryId}`);
-                    continentPaths.forEach(path => path.style.fill = '');
-                });
-            }
-        }
-
-        // Hide tooltip
-        tooltip.style.display = 'none';
-    }
-
-    function handleClick(countryId, event) {
-    const { pageX: x, pageY: y } = event;
-
-    if (!firstClick) {
-        // First dot
-        firstClick = { x, y };
-        createDot(x, y);
-        placeholder.textContent = "Choose Your End Destination";
-    } else if (!secondClick) {
-        // Second dot and line
-        secondClick = { x, y };
-        createDot(x, y);
-        createLine(firstClick.x, firstClick.y, secondClick.x, secondClick.y);
-        placeholder.textContent = "Choose a Destination"; // Reset placeholder
-    } else {
-        // Reset previous dots and line
-        resetDotsAndLine();
-        firstClick = { x, y };
-        secondClick = null;
-        createDot(x, y);
-        placeholder.textContent = "Choose Your End Destination"; // Reset placeholder
     }
 }
 
-    function createDot(x, y) {
-        const dot = document.createElement('div');
-        dot.classList.add('dot');
-        dot.style.left = `${x}px`;
-        dot.style.top = `${y}px`;
-        document.body.appendChild(dot);
-    }
+function handleMouseOut(countryId) {
+    if (!isCountryInMap(countryId)) return;
 
-    function createLine(x1, y1, x2, y2) {
-        lineElement = document.createElement('div');
-        lineElement.classList.add('line');
-        const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-        const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
-        lineElement.style.width = `${length}px`;
-        lineElement.style.transform = `rotate(${angle}deg)`;
-        lineElement.style.left = `${x1}px`;
-        lineElement.style.top = `${y1}px`;
-        document.body.appendChild(lineElement);
-    }
-
-    function resetDotsAndLine() {
-        document.querySelectorAll('.dot').forEach(dot => dot.remove());
-        if (lineElement) {
-            lineElement.remove();
-            lineElement = null;
-        }
-    }
-
-    function resetScales() {
-        document.querySelectorAll('path').forEach(path => {
-            path.style.transform = '';
-        });
-    }
-
-    function isCountryInMap(countryId) {
-        return Object.values(continentMap).some(countries => countries.includes(countryId));
-    }
-
-    document.querySelectorAll('path').forEach(path => {
-        const countryId = path.id || path.classList[0];
-        if (isCountryInMap(countryId)) {
-            path.addEventListener('mouseover', (event) => handleHover(countryId, event));
-            path.addEventListener('mouseout', () => handleMouseOut(countryId));
-            path.addEventListener('click', (event) => handleClick(countryId, event));
-        }
+    // Reset the background color for the hovered country
+    const countryPaths = getPathsByCountryId(countryId);
+    countryPaths.forEach(path => {
+        path.style.fill = ""; // Reset fill to default
+        path.style.transform = ""; // Reset scale
     });
 
-const resetButton = document.getElementById('reset-button');
+    // Reset the background color for the entire continent
+    for (const continent in continentMap) {
+        if (continentMap[continent].includes(countryId)) {
+            continentMap[continent].forEach(continentCountryId => {
+                const continentPaths = getPathsByCountryId(continentCountryId);
+                continentPaths.forEach(path => (path.style.fill = ""));
+            });
+        }
+    }
 
-resetButton.addEventListener('click', () => {
-    // Clear dots and line
+    // Hide the tooltip
+    tooltip.style.display = "none";
+}
+function handleClick(countryId, event) {
+    const pathElement = document.querySelector(`#${countryId}, .${countryId}`);
+    if (!pathElement) return;
+
+    // Try to get the name attribute
+    let countryName = pathElement.getAttribute("name");
+    
+    // If name attribute is not present, fallback to the class name or id
+    if (!countryName) {
+        countryName = pathElement.className.baseVal || pathElement.id || "Unknown Country";
+    }
+
+    const { pageX: x, pageY: y } = event;
+
+    if (!firstClick) {
+        // First click: Set start location
+        firstClick = { x, y, countryName };
+        createLocationTag(x, y, "Start");
+        startLocation.textContent = `Start Location: ${countryName}`;
+        placeholder.textContent = "Choose Your End Destination";
+    } else if (!secondClick) {
+        // Second click: Set end location
+        secondClick = { x, y, countryName };
+        createLocationTag(x, y, "End");
+        createLine(firstClick.x, firstClick.y, secondClick.x, secondClick.y);
+        endLocation.textContent = `End Location: ${countryName}`;
+        placeholder.textContent = "Choose a Destination";
+    } else {
+        // Third click: Reset and set new start location
+        resetDotsAndLine();
+        firstClick = { x, y, countryName };
+        secondClick = null;
+        createLocationTag(x, y, "Start");
+        startLocation.textContent = `Start Location: ${countryName}`;
+        endLocation.textContent = "End Location: None";
+        placeholder.textContent = "Choose Your End Destination";
+    }
+}
+
+function createLocationTag(x, y, label) {
+    // Create container div for the tag
+    const tag = document.createElement("div");
+    tag.classList.add("location-tag");
+    tag.style.position = "absolute";
+    tag.style.left = `${x - 12}px`; // Adjust to center the icon horizontally
+    tag.style.top = `${y - 24}px`; // Adjust to position the icon vertically
+    tag.style.pointerEvents = "none"; // Prevent interaction
+
+    // Create SVG for the location marker
+    const svgNS = "http://www.w3.org/2000/svg";
+    const svgIcon = document.createElementNS(svgNS, "svg");
+    svgIcon.setAttribute("width", "24");
+    svgIcon.setAttribute("height", "24");
+    svgIcon.setAttribute("viewBox", "0 0 24 24");
+    svgIcon.setAttribute("fill", "none");
+    svgIcon.innerHTML = `
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 12.92 7 12.92s7-7.67 7-12.92c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="${label === "Start" ? "green" : "red"}"/>
+    `;
+
+    // Add label text below the marker
+    const labelDiv = document.createElement("div");
+    labelDiv.classList.add("location-label");
+    labelDiv.textContent = label;
+    labelDiv.style.position = "absolute";
+    labelDiv.style.top = "26px"; // Below the marker
+    labelDiv.style.left = "-6px"; // Center align with marker
+    labelDiv.style.fontSize = "12px";
+    labelDiv.style.color = label === "Start" ? "green" : "red";
+
+    // Append SVG and label to the container
+    tag.appendChild(svgIcon);
+    tag.appendChild(labelDiv);
+
+    // Add the tag to the document
+    document.body.appendChild(tag);
+}
+
+
+function createLine(x1, y1, x2, y2) {
+    lineElement = document.createElement("div");
+    lineElement.classList.add("line");
+    const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+    const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
+    lineElement.style.width = `${length}px`;
+    lineElement.style.transform = `rotate(${angle}deg)`;
+    lineElement.style.left = `${x1}px`;
+    lineElement.style.top = `${y1}px`;
+    document.body.appendChild(lineElement);
+}
+
+function resetDotsAndLine() {
+    // Remove all location tags and lines
+    document.querySelectorAll('.location-tag').forEach(tag => tag.remove());
+    if (lineElement) {
+        lineElement.remove();
+        lineElement = null;
+    }
+}
+
+function resetScales() {
+    document.querySelectorAll("path").forEach(path => {
+        path.style.transform = "";
+    });
+}
+
+function resetColors(countryId) {
+    const countryPaths = getPathsByCountryId(countryId);
+    countryPaths.forEach(path => (path.style.fill = ""));
+}
+
+function getPathsByCountryId(countryId) {
+    return document.querySelectorAll(`#${countryId}, .${countryId}`);
+}
+
+function isCountryInMap(countryId) {
+    return Object.values(continentMap).some(countries => countries.includes(countryId));
+}
+
+function displayTooltip(event, continent) {
+    tooltip.style.display = "block";
+    tooltip.innerText = `${continent}: ${continentInfo[continent]}`;
+    const tooltipRect = tooltip.getBoundingClientRect();
+    tooltip.style.left = `${Math.min(event.pageX + 10, window.innerWidth - tooltipRect.width - 10)}px`;
+    tooltip.style.top = `${Math.min(event.pageY + 10, window.innerHeight - tooltipRect.height - 10)}px`;
+}
+
+function highlightContinent(continent) {
+    continentMap[continent].forEach(countryId => {
+        const continentPaths = getPathsByCountryId(countryId);
+        continentPaths.forEach(path => (path.style.fill = "black"));
+    });
+}
+
+resetButton.addEventListener("click", () => {
     resetDotsAndLine();
-    // Reset placeholder text
-    placeholder.textContent = "Choose a Destination";
-    // Reset clicks
     firstClick = null;
     secondClick = null;
+    startLocation.textContent = "Start Location: None";
+    endLocation.textContent = "End Location: None";
+    placeholder.textContent = "Choose a Destination";
 });
-</script>
+
+document.querySelectorAll("path").forEach(path => {
+    const countryId = path.id || path.classList[0];
+    if (isCountryInMap(countryId)) {
+        path.addEventListener("mouseover", event => handleHover(countryId, event));
+        path.addEventListener("mouseout", () => handleMouseOut(countryId));
+        path.addEventListener("click", event => handleClick(countryId, event));
+    }
+});</script>
 
 </body>
 
