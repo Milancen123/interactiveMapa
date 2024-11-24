@@ -1762,7 +1762,29 @@ function handleMouseOut(countryId) {
     // Hide the tooltip
     tooltip.style.display = "none";
 }
-function handleClick(countryId, event) {
+
+
+
+async function fetchCountryFlag(countryName) {
+    try {
+        const response = await fetch(`https://restcountries.com/v3.1/name/${encodeURIComponent(countryName)}?fields=flags`);
+        if (!response.ok) throw new Error("Country not found");
+        const data = await response.json();
+        return data[0]?.flags?.png || null; // Return the PNG flag URL
+    } catch (error) {
+        console.error(`Error fetching flag for ${countryName}:`, error);
+        return null;
+    }
+}
+
+
+
+
+
+
+
+
+async function handleClick(countryId, event) {
     const pathElement = document.querySelector(`#${countryId}, .${countryId}`);
     if (!pathElement) return;
 
@@ -1776,19 +1798,20 @@ function handleClick(countryId, event) {
     console.log(countryName);
 
     const { pageX: x, pageY: y } = event;
+    let flagURL = await fetchCountryFlag(countryName);
 
     if (!firstClick) {
         // First click: Set start location
         firstClick = { x, y, countryName };
         createLocationTag(x, y, "Start");
-        startLocation.innerHTML = `<img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> ${countryName}`;
+        startLocation.innerHTML = `<img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> ${countryName} <img src="${flagURL}" width="24px"/>`;
         placeholder.textContent = "Choose Your End Destination";
     } else if (!secondClick) {
         // Second click: Set end location
         secondClick = { x, y, countryName };
         createLocationTag(x, y, "End");
         createLine(firstClick.x, firstClick.y, secondClick.x, secondClick.y);
-        endLocation.innerHTML = `<img src="crveni_tag.png" width="16px" id="zeleni_tag"/> ${countryName}`;
+        endLocation.innerHTML = `<img src="crveni_tag.png" width="16px" id="zeleni_tag"/> ${countryName} <img src="${flagURL}" width="24px"/>`;
         placeholder.textContent = "Choose a Destination";
     } else {
         // Third click: Reset and set new start location
@@ -1796,7 +1819,7 @@ function handleClick(countryId, event) {
         firstClick = { x, y, countryName };
         secondClick = null;
         createLocationTag(x, y, "Start");
-        startLocation.innerHTML = `<img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> ${countryName}`;
+        startLocation.innerHTML = `<img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> ${countryName} <img src="${flagURL}" width="24px"/>`;
         endLocation.innerHTML = `<img src="crveni_tag.png" width="16px" id="zeleni_tag"/> None`;
         placeholder.textContent = "Choose Your End Destination";
     }
