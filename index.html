@@ -1825,14 +1825,39 @@ async function handleClick(countryId, event) {
     }
 }
 
-function createLocationTag(x, y, label) {
+function initializeDynamicLocationTags() {
+    // Define the specific locations to tag
+    const targetLocations = {
+        USA: "US",          // Replace "us" with the actual country ID or class for USA
+        Europe: "DE",       // Replace "de" with a representative country ID for Europe (e.g., Germany)
+        Japan: "Japan",        // Replace "jp" with the actual country ID for Japan
+        Australia: "Australia"     // Replace "au" with the actual country ID for Australia
+    };
+
+    for (const [label, countryId] of Object.entries(targetLocations)) {
+        const countryPath = document.querySelector(`#${countryId}, .${countryId}`);
+
+        if (!countryPath) continue; // Skip if the country's path is not found
+
+        // Get the bounding box of the country's path
+        const bbox = countryPath.getBoundingClientRect();
+        const x = bbox.left + bbox.width / 2; // Center horizontally
+        const y = bbox.top + bbox.height / 2; // Center vertically
+
+        // Create a location tag for the specific country
+        createLocationTag(x, y, label, true);
+    }
+}
+
+function createLocationTag(x, y, label, isPermanent = false) {
     // Create container div for the tag
     const tag = document.createElement("div");
     tag.classList.add("location-tag");
+    if (isPermanent) tag.classList.add("permanent-tag");
     tag.style.position = "absolute";
     tag.style.left = `${x - 12}px`; // Adjust to center the icon horizontally
     tag.style.top = `${y - 24}px`; // Adjust to position the icon vertically
-    tag.style.pointerEvents = "none"; // Prevent interaction
+    tag.style.pointerEvents = "none"; // Prevent interaction for permanent tags
 
     // Create SVG for the location marker
     const svgNS = "http://www.w3.org/2000/svg";
@@ -1842,7 +1867,7 @@ function createLocationTag(x, y, label) {
     svgIcon.setAttribute("viewBox", "0 0 24 24");
     svgIcon.setAttribute("fill", "none");
     svgIcon.innerHTML = `
-        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 12.92 7 12.92s7-7.67 7-12.92c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="${label === "Start" ? "green" : "red"}"/>
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 12.92 7 12.92s7-7.67 7-12.92c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="red"/>
     `;
 
     // Add label text below the marker
@@ -1852,7 +1877,8 @@ function createLocationTag(x, y, label) {
     labelDiv.style.top = "26px"; // Below the marker
     labelDiv.style.left = "-6px"; // Center align with marker
     labelDiv.style.fontSize = "12px";
-    labelDiv.style.color = label === "Start" ? "green" : "red";
+    labelDiv.style.color = "red";
+    labelDiv.textContent = label;
 
     // Append SVG and label to the container
     tag.appendChild(svgIcon);
@@ -1861,6 +1887,9 @@ function createLocationTag(x, y, label) {
     // Add the tag to the document
     document.body.appendChild(tag);
 }
+
+// Initialize tags when the document is ready
+initializeDynamicLocationTags();
 
 
 function createLine(x1, y1, x2, y2) {
@@ -1925,6 +1954,7 @@ resetButton.addEventListener("click", () => {
     startLocation.innerHTML = `<img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> None`;
     endLocation.innerHTML = `<img src="crveni_tag.png" width="16px" id="zeleni_tag"/> None`;
     placeholder.textContent = "Choose a Destination";
+    initializeDynamicLocationTags();
 });
 
 document.querySelectorAll("path").forEach(path => {
