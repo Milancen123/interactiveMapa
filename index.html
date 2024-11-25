@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -1679,7 +1680,8 @@ THE SOFTWARE.
     Europe: "Europe is famous for its historical landmarks",
     NorthAmerica: "North America is renowned for its cultural diversity",
     Australia: "Australia is recognized for its landscapes",
-    Asia: "Asia is known for its rich cultural heritage"
+    Asia: "Asia is known for its rich cultural heritage",
+SouthAmerica: "South America is renowned for its vibrant and colorful carnivals"
 };
 
 const continentMap = {
@@ -1698,6 +1700,10 @@ const continentMap = {
     NorthAmerica: [
         "AG", "BS", "BB", "BZ", "CA", "CR", "CU", "DM", "DO", "SV", "GD", "GT", "HT", "HN", "JM", "MX", "NI",
         "PA", "KN", "LC", "VC", "TT", "US", "Mexico", "United States", "Canada", "United States Virgin Islands", "United States", "United States Of America", "Alaska",
+    ],
+    SouthAmerica: [
+        "AR", "BO", "BR", "CL", "CO", "EC", "GY", "PY", "PE", "SR", "UY", "VE",
+        "Argentina", "Bolivia", "Brazil", "Chile", "Colombia", "Ecuador", "Guyana", "Paraguay", "Peru", "Suriname", "Uruguay", "Venezuela"
     ],
     Australia: [
         "AU", "NZ", "FJ", "PG", "SB", "VU", "WS", "TO", "TV", "NR", "KI", "FM", "MH", "PW",
@@ -1831,7 +1837,8 @@ function initializeDynamicLocationTags() {
         USA: "US",          // Replace "us" with the actual country ID or class for USA
         Europe: "DE",       // Replace "de" with a representative country ID for Europe (e.g., Germany)
         Japan: "Japan",        // Replace "jp" with the actual country ID for Japan
-        Australia: "Australia"     // Replace "au" with the actual country ID for Australia
+        Australia: "Australia",     // Replace "au" with the actual country ID for Australia
+	SouthAmerica: "BR"
     };
 
     for (const [label, countryId] of Object.entries(targetLocations)) {
