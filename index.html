@@ -1803,13 +1803,13 @@ async function handleClick(countryId, event) {
     if (!firstClick) {
         // First click: Set start location
         firstClick = { x, y, countryName };
-        createLocationTag(x, y, "Start");
+        createLocationTag(x, y, "");
         startLocation.innerHTML = `<img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> ${countryName} <img src="${flagURL}" width="24px"/>`;
         placeholder.textContent = "Choose Your End Destination";
     } else if (!secondClick) {
         // Second click: Set end location
         secondClick = { x, y, countryName };
-        createLocationTag(x, y, "End");
+        createLocationTag(x, y, "");
         createLine(firstClick.x, firstClick.y, secondClick.x, secondClick.y);
         endLocation.innerHTML = `<img src="crveni_tag.png" width="16px" id="zeleni_tag"/> ${countryName} <img src="${flagURL}" width="24px"/>`;
         placeholder.textContent = "Choose a Destination";
@@ -1818,7 +1818,7 @@ async function handleClick(countryId, event) {
         resetDotsAndLine();
         firstClick = { x, y, countryName };
         secondClick = null;
-        createLocationTag(x, y, "Start");
+        createLocationTag(x, y, "");
         startLocation.innerHTML = `<img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> ${countryName} <img src="${flagURL}" width="24px"/>`;
         endLocation.innerHTML = `<img src="crveni_tag.png" width="16px" id="zeleni_tag"/> None`;
         placeholder.textContent = "Choose Your End Destination";
