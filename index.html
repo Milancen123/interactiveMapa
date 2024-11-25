@@ -58,13 +58,13 @@
         pointer-events: none;
     }
 
-    .line {
-        position: absolute;
-        height: 2px;
-        background-color: #808080;
-        transform-origin: 0 0;
-        pointer-events: none;
-    }
+ .line {
+    position: absolute;
+    height: 0; /* Set height to 0, as the border will define the line */
+    border-top: 2px dashed #808080; /* Use border for the dashed line */
+    transform-origin: 0 0;
+    pointer-events: none;
+}
 
 
 /* Stil za tooltip */
