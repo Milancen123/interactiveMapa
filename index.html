@@ -148,7 +148,7 @@ font-family: 'Montserrat', sans-serif;
 
   .reset-button:hover {
     background-color: rgba(0, 0, 0, 0.93);
-    transform: scale(1.009);
+    transform: scale(1.0009);
   }
 
   .reset-button:active {
@@ -1732,18 +1732,20 @@ function handleHover(countryId, event) {
     resetScales();
     const countryPaths = getPathsByCountryId(countryId);
 
-    countryPaths.forEach(path => {
-        path.style.fill = "black";
-        path.style.transform = "scale(1.008)";
-    });
-
-    for (const continent in continentMap) {
+for (const continent in continentMap) {
         if (continentMap[continent].includes(countryId)) {
             displayTooltip(event, continent);
             highlightContinent(continent);
         }
     }
-}
+
+
+    countryPaths.forEach(path => {
+        path.style.fill = "#FBCEB1";
+	
+    });
+
+    }
 
 function handleMouseOut(countryId) {
     if (!isCountryInMap(countryId)) return;
