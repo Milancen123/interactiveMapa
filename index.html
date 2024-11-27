@@ -1741,7 +1741,9 @@ for (const continent in continentMap) {
 
 
     countryPaths.forEach(path => {
-        path.style.fill = "#1E1E1E";
+        path.style.fill = "black";
+	path.style.stroke="white";
+	path.style.strokeWidth="3px";
 	
     });
 
@@ -1755,6 +1757,9 @@ function handleMouseOut(countryId) {
     countryPaths.forEach(path => {
         path.style.fill = ""; // Reset fill to default
         path.style.transform = ""; // Reset scale
+	path.style.stroke="";
+	path.style.strokeWidth="";s
+
     });
 
     // Reset the background color for the entire continent
