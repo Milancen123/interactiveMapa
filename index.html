@@ -1742,8 +1742,7 @@ for (const continent in continentMap) {
 
     countryPaths.forEach(path => {
         path.style.fill = "black";
-	path.style.stroke="white";
-	path.style.strokeWidth="3px";
+
 	
     });
 
@@ -1757,7 +1756,7 @@ function handleMouseOut(countryId) {
     countryPaths.forEach(path => {
         path.style.fill = ""; // Reset fill to default
         path.style.transform = ""; // Reset scale
-	path.style.stroke="none";
+
 
     });
 
@@ -1800,9 +1799,21 @@ async function handleClick(countryId, event) {
     const pathElement = document.querySelector(`#${countryId}, .${countryId}`);
     if (!pathElement) return;
 
+    // Reset stroke colors for all paths
+    document.querySelectorAll("path").forEach(path => {
+        path.style.stroke = ""; // Reset stroke to default
+        path.style.strokeWidth = ""; // Reset stroke width to default
+    });
+
+    // Highlight the selected country's border
+    const countryPaths = getPathsByCountryId(countryId);
+    countryPaths.forEach(path => {
+        path.style.stroke = "red"; // Change the stroke color
+        path.style.strokeWidth = "2px"; // Optional: Adjust stroke width
+    });
+
     // Try to get the name attribute
     let countryName = pathElement.getAttribute("name");
-    // If name attribute is not present, fallback to the class name or id
     if (!countryName) {
         countryName = pathElement.className.baseVal || pathElement.id || "Unknown Country";
     }
@@ -1813,20 +1824,17 @@ async function handleClick(countryId, event) {
     let flagURL = await fetchCountryFlag(countryName);
 
     if (!firstClick) {
-        // First click: Set start location
         firstClick = { x, y, countryName };
         createLocationTag(x, y, "");
         startLocation.innerHTML = `<img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> ${countryName} <img src="${flagURL}" width="24px"/>`;
         placeholder.textContent = "Choose Your End Destination";
     } else if (!secondClick) {
-        // Second click: Set end location
         secondClick = { x, y, countryName };
         createLocationTag(x, y, "");
         createLine(firstClick.x, firstClick.y, secondClick.x, secondClick.y);
         endLocation.innerHTML = `<img src="crveni_tag.png" width="16px" id="zeleni_tag"/> ${countryName} <img src="${flagURL}" width="24px"/>`;
         placeholder.textContent = "Choose a Destination";
     } else {
-        // Third click: Reset and set new start location
         resetDotsAndLine();
         firstClick = { x, y, countryName };
         secondClick = null;
@@ -1834,12 +1842,9 @@ async function handleClick(countryId, event) {
         startLocation.innerHTML = `<img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> ${countryName} <img src="${flagURL}" width="24px"/>`;
         endLocation.innerHTML = `<img src="crveni_tag.png" width="16px" id="zeleni_tag"/> None`;
         placeholder.textContent = "Choose Your End Destination";
-	initializeDynamicLocationTags();
-
+        initializeDynamicLocationTags();
     }
-
 }
-
 function initializeDynamicLocationTags() {
     // Define the specific locations to tag
     const targetLocations = {
@@ -1937,7 +1942,11 @@ function resetScales() {
 
 function resetColors(countryId) {
     const countryPaths = getPathsByCountryId(countryId);
-    countryPaths.forEach(path => (path.style.fill = ""));
+    countryPaths.forEach(path => {
+	path.style.fill = "";
+	path.style.stroke = "";
+
+});
 }
 
 function getPathsByCountryId(countryId) {
@@ -1964,15 +1973,25 @@ function highlightContinent(continent) {
 }
 
 resetButton.addEventListener("click", () => {
+    // Reset location tags and lines
     resetDotsAndLine();
     firstClick = null;
     secondClick = null;
+
+    // Reset UI elements
     startLocation.innerHTML = `<img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> None`;
     endLocation.innerHTML = `<img src="crveni_tag.png" width="16px" id="zeleni_tag"/> None`;
     placeholder.textContent = "Choose a Destination";
+
+    // Remove red outlines from all countries
+    document.querySelectorAll("path").forEach(path => {
+        path.style.stroke = ""; // Reset stroke to default
+        path.style.strokeWidth = ""; // Reset stroke width to default
+    });
+
+    // Reinitialize dynamic location tags
     initializeDynamicLocationTags();
 });
-
 document.querySelectorAll("path").forEach(path => {
     const countryId = path.id || path.classList[0];
     if (isCountryInMap(countryId)) {
