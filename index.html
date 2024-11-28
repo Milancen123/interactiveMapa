@@ -171,6 +171,11 @@ font-family: 'Montserrat', sans-serif;
 
     <div class="map-container">
 <div id="tooltip" class="tooltip"></div>
+<div id="flag-placeholder" style="position: absolute; top: 10px; right: 10px; z-index: 10; display: flex; align-items: center; gap: 5px; background: white; padding: 5px; border: 1px solid #ccc; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+    <img id="start-flag" src="" alt="Start Flag" width="24" style="display: none;">
+    <span id="arrow" style="font-size: 18px; display: none;">→</span>
+    <img id="end-flag" src="" alt="End Flag" width="24" style="display: none;">
+</div>
 
         <?xml version="1.0"?>
         <!--
@@ -1796,55 +1801,66 @@ async function fetchCountryFlag(countryName) {
 
 
 
-
 async function handleClick(countryId, event) {
     const pathElement = document.querySelector(`#${countryId}, .${countryId}`);
     if (!pathElement) return;
 
-    // Reset stroke colors for all paths
     document.querySelectorAll("path").forEach(path => {
-        path.style.stroke = ""; // Reset stroke to default
-        path.style.strokeWidth = ""; // Reset stroke width to default
+        path.style.stroke = "";
+        path.style.strokeWidth = "";
     });
 
-    // Highlight the selected country's border
     const countryPaths = getPathsByCountryId(countryId);
     countryPaths.forEach(path => {
-        path.style.stroke = "#484848"; // Change the stroke color
-        path.style.strokeWidth = "2px"; // Optional: Adjust stroke width
+        path.style.stroke = "#484848";
+        path.style.strokeWidth = "2px";
     });
 
-    // Try to get the name attribute
-    let countryName = pathElement.getAttribute("name");
-    if (!countryName) {
-        countryName = pathElement.className.baseVal || pathElement.id || "Unknown Country";
-    }
+    let countryName = pathElement.getAttribute("name") || pathElement.className.baseVal || pathElement.id || "Unknown Country";
 
     console.log(countryName);
 
     const { pageX: x, pageY: y } = event;
     let flagURL = await fetchCountryFlag(countryName);
 
+    const startFlag = document.getElementById("start-flag");
+    const endFlag = document.getElementById("end-flag");
+    const arrow = document.getElementById("arrow");
+
     if (!firstClick) {
-        firstClick = { x, y, countryName };
+        firstClick = { x, y, countryName, flagURL };
         createLocationTag(x, y, "");
         startLocation.innerHTML = `<img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> ${countryName} <img src="${flagURL}" width="24px"/>`;
         placeholder.textContent = "Choose Your End Destination";
+
+        // Update start flag
+        startFlag.src = flagURL;
+        startFlag.style.display = "inline-block";
     } else if (!secondClick) {
-        secondClick = { x, y, countryName };
+        secondClick = { x, y, countryName, flagURL };
         createLocationTag(x, y, "");
         createLine(firstClick.x, firstClick.y, secondClick.x, secondClick.y);
         endLocation.innerHTML = `<img src="crveni_tag.png" width="16px" id="zeleni_tag"/> ${countryName} <img src="${flagURL}" width="24px"/>`;
         placeholder.textContent = "Choose a Destination";
+
+        // Update end flag and arrow
+        endFlag.src = flagURL;
+        endFlag.style.display = "inline-block";
+        arrow.style.display = "inline-block";
     } else {
         resetDotsAndLine();
-        firstClick = { x, y, countryName };
+        firstClick = { x, y, countryName, flagURL };
         secondClick = null;
         createLocationTag(x, y, "");
         startLocation.innerHTML = `<img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> ${countryName} <img src="${flagURL}" width="24px"/>`;
         endLocation.innerHTML = `<img src="crveni_tag.png" width="16px" id="zeleni_tag"/> None`;
         placeholder.textContent = "Choose Your End Destination";
         initializeDynamicLocationTags();
+
+        // Reset placeholder
+        startFlag.src = flagURL;
+        endFlag.style.display = "none";
+        arrow.style.display = "none";
     }
 }
 function initializeDynamicLocationTags() {
@@ -1991,9 +2007,19 @@ resetButton.addEventListener("click", () => {
         path.style.strokeWidth = ""; // Reset stroke width to default
     });
 
+    // Reset flag placeholder
+    const startFlag = document.getElementById("start-flag");
+    const endFlag = document.getElementById("end-flag");
+    const arrow = document.getElementById("arrow");
+
+    startFlag.style.display = "none"; // Hide start flag
+    endFlag.style.display = "none";   // Hide end flag
+    arrow.style.display = "none";     // Hide arrow
+
     // Reinitialize dynamic location tags
     initializeDynamicLocationTags();
 });
+
 document.querySelectorAll("path").forEach(path => {
     const countryId = path.id || path.classList[0];
     if (isCountryInMap(countryId)) {
