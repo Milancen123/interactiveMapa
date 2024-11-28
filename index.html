@@ -152,9 +152,10 @@ font-family: 'Montserrat', sans-serif;
     top: 10px;
     right: 35%;
     z-index: 10; 
+
 	display: flex; 
 	align-items: center;
-	gap: 5px; background: white;
+	gap: 5px; background: #ececec;
 	padding: 5px; 
 	border: 1px solid #ccc; 
 	border-radius: 5px; 
@@ -172,6 +173,7 @@ top:0%;
 	}
 
 }
+
 
 @media (max-width: 480px) {
     .tooltip {
@@ -1748,10 +1750,15 @@ const placeholder = document.getElementById("placeholder");
 const startLocation = document.getElementById("start-location");
 const endLocation = document.getElementById("end-location");
 const resetButton = document.getElementById("reset-button");
+const flag_placeholder = document.getElementById('flag-placeholder');
+
+
 
 let firstClick = null;
 let secondClick = null;
 let lineElement = null;
+
+
 
 function handleHover(countryId, event) {
     if (!isCountryInMap(countryId)) return;
@@ -1852,7 +1859,7 @@ async function handleClick(countryId, event) {
         createLocationTag(x, y, "");
         startLocation.innerHTML = `<img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> ${countryName} <img src="${flagURL}" width="24px"/>`;
         placeholder.textContent = "Choose Your End Destination";
-
+flag_placeholder.style.display='block';
         // Update start flag
         startFlag.src = flagURL;
         startFlag.style.display = "inline-block";
@@ -1862,13 +1869,14 @@ async function handleClick(countryId, event) {
         createLine(firstClick.x, firstClick.y, secondClick.x, secondClick.y);
         endLocation.innerHTML = `<img src="crveni_tag.png" width="16px" id="zeleni_tag"/> ${countryName} <img src="${flagURL}" width="24px"/>`;
         placeholder.textContent = "Choose a Destination";
-
+flag_placeholder.style.display='block';
         // Update end flag and arrow
         endFlag.src = flagURL;
         endFlag.style.display = "inline-block";
         arrow.style.display = "inline-block";
     } else {
         resetDotsAndLine();
+flag_placeholder.style.display='block';
         firstClick = { x, y, countryName, flagURL };
         secondClick = null;
         createLocationTag(x, y, "");
@@ -1892,7 +1900,8 @@ function initializeDynamicLocationTags() {
         Australia: "Australia",     // Replace "au" with the actual country ID for Australia
 	SouthAmerica: "BR"
     };
-
+	
+flag_placeholder.style.display='none';
     for (const [label, countryId] of Object.entries(targetLocations)) {
         const countryPath = document.querySelector(`#${countryId}, .${countryId}`);
 
