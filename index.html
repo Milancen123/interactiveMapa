@@ -1886,7 +1886,7 @@ flag_placeholder.style.display='block';
         arrow.style.display = "inline-block";
     } else {
         resetDotsAndLine();
-flag_placeholder.style.display='block';
+
         firstClick = { x, y, countryName, flagURL };
         secondClick = null;
         createLocationTag(x, y, "");
@@ -1894,9 +1894,10 @@ flag_placeholder.style.display='block';
         endLocation.innerHTML = `<img src="crveni_tag.png" width="16px" id="zeleni_tag"/> None`;
         placeholder.textContent = "Choose Your End Destination";
         initializeDynamicLocationTags();
-
+	flag_placeholder.style.display='block';
         // Reset placeholder
         startFlag.src = flagURL;
+	startFlag.style.display = "inline-block";
         endFlag.style.display = "none";
         arrow.style.display = "none";
     }
