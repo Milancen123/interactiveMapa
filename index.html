@@ -174,7 +174,6 @@ top:0%;
 }
 
 
-
 @media (max-width: 480px) {
     .tooltip {
         font-size: 0.45rem; /* Još manji font za vrlo male ekrane */
@@ -1856,7 +1855,7 @@ async function handleClick(countryId, event) {
 
     if (!firstClick) {
         firstClick = { x, y, countryName, flagURL };
-        createLocationTag(x, y, "");
+        createLocationTag(x, y, "", false, 'green');
         startLocation.innerHTML = `<img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> ${countryName} <img src="${flagURL}" width="24px"/>`;
         placeholder.textContent = "Choose Your End Destination";
 flag_placeholder.style.display='block';
@@ -1865,7 +1864,7 @@ flag_placeholder.style.display='block';
         startFlag.style.display = "inline-block";
     } else if (!secondClick) {
         secondClick = { x, y, countryName, flagURL };
-        createLocationTag(x, y, "");
+        createLocationTag(x, y, "", false, 'red');
         createLine(firstClick.x, firstClick.y, secondClick.x, secondClick.y);
         endLocation.innerHTML = `<img src="crveni_tag.png" width="16px" id="zeleni_tag"/> ${countryName} <img src="${flagURL}" width="24px"/>`;
         placeholder.textContent = "Choose a Destination";
@@ -1879,7 +1878,7 @@ flag_placeholder.style.display='block';
 
         firstClick = { x, y, countryName, flagURL };
         secondClick = null;
-        createLocationTag(x, y, "");
+        createLocationTag(x, y, "", false, 'green');
         startLocation.innerHTML = `<img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> ${countryName} <img src="${flagURL}" width="24px"/>`;
         endLocation.innerHTML = `<img src="crveni_tag.png" width="16px" id="zeleni_tag"/> None`;
         placeholder.textContent = "Choose Your End Destination";
@@ -1892,20 +1891,18 @@ flag_placeholder.style.display='block';
         arrow.style.display = "none";
     }
 }
-function initializeDynamicLocationTags() {
+async function initializeDynamicLocationTags() {
     // Define the specific locations to tag
     const targetLocations = {
-        USA: "US",          // Replace "us" with the actual country ID or class for USA
-        Europe: "DE",       // Replace "de" with a representative country ID for Europe (e.g., Germany)
-        Japan: "Japan",        // Replace "jp" with the actual country ID for Japan
-        Australia: "Australia",     // Replace "au" with the actual country ID for Australia
-	SouthAmerica: "BR"
+        USA: "US",          // Replace "US" with the actual country ID or class for the USA
+        Europe: "DE",       // Replace "DE" with a representative country ID for Europe (e.g., Germany)
+        Japan: "Japan",     // Replace "Japan" with the actual country ID for Japan
+        Australia: "Australia", // Replace "Australia" with the actual country ID for Australia
+        SouthAmerica: "BR", // Replace "BR" with Brazil for South America
     };
-	
-flag_placeholder.style.display='none';
+
     for (const [label, countryId] of Object.entries(targetLocations)) {
         const countryPath = document.querySelector(`#${countryId}, .${countryId}`);
-
         if (!countryPath) continue; // Skip if the country's path is not found
 
         // Get the bounding box of the country's path
@@ -1913,12 +1910,32 @@ flag_placeholder.style.display='none';
         const x = bbox.left + bbox.width / 2; // Center horizontally
         const y = bbox.top + bbox.height / 2; // Center vertically
 
-        // Create a location tag for the specific country
-        createLocationTag(x, y, label, true);
+        // Handle USA differently to display its flag
+        if (label === "USA") {
+            const flagUrl = await fetchCountryFlag("United States");
+            if (flagUrl) {
+                const img = document.createElement("img");
+                img.src = flagUrl;
+                img.alt = "USA Flag";
+                img.style.position = "absolute";
+                img.style.left = `${x - 12}px`; // Adjust for centering
+                img.style.top = `${y - 12}px`; // Adjust for centering
+                img.style.width = "24px"; // Set a standard flag size
+                img.style.height = "16px"; // Maintain aspect ratio
+                img.style.pointerEvents = "none"; // Make it non-interactive
+
+                // Add the flag to the document
+                document.body.appendChild(img);
+            } else {
+                console.warn("Flag for USA could not be fetched.");
+            }
+        } else {
+            // Create a location tag for other countries
+            createLocationTag(x, y, label, true, "red");
+        }
     }
 }
-
-function createLocationTag(x, y, label, isPermanent = false) {
+function createLocationTag(x, y, label, isPermanent = false, color = "none") {
     // Create container div for the tag
     const tag = document.createElement("div");
     tag.classList.add("location-tag");
@@ -1934,10 +1951,17 @@ function createLocationTag(x, y, label, isPermanent = false) {
     svgIcon.setAttribute("width", "24");
     svgIcon.setAttribute("height", "24");
     svgIcon.setAttribute("viewBox", "0 0 24 24");
-    svgIcon.setAttribute("fill", "none");
-    svgIcon.innerHTML = `
-        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 12.92 7 12.92s7-7.67 7-12.92c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="red"/>
-    `;
+
+    // Create the path element
+    const path = document.createElementNS(svgNS, "path");
+    path.setAttribute(
+        "d",
+        "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 12.92 7 12.92s7-7.67 7-12.92c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
+    );
+    path.setAttribute("fill", color);
+
+    // Append the path to the SVG
+    svgIcon.appendChild(path);
 
     // Add label text below the marker
     const labelDiv = document.createElement("div");
@@ -1946,7 +1970,7 @@ function createLocationTag(x, y, label, isPermanent = false) {
     labelDiv.style.top = "26px"; // Below the marker
     labelDiv.style.left = "-6px"; // Center align with marker
     labelDiv.style.fontSize = "12px";
-    labelDiv.style.color = "red";
+    labelDiv.style.color = "red"; // Customize label text color
     labelDiv.textContent = label;
 
     // Append SVG and label to the container
