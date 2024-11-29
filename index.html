@@ -1926,13 +1926,55 @@ async function initializeDynamicLocationTags() {
 
                 // Add the flag to the document
                 document.body.appendChild(img);
-            } else {
-                console.warn("Flag for USA could not be fetched.");
-            }
-        } else {
-            // Create a location tag for other countries
+        } else if(label === "China") {
+            const flagUrl = await fetchCountryFlag("China");
+            if (flagUrl) {
+                const img = document.createElement("img");
+                img.src = flagUrl;
+                img.alt = "China";
+                img.style.position = "absolute";
+                img.style.left = `${x - 12}px`; // Adjust for centering
+                img.style.top = `${y - 12}px`; // Adjust for centering
+                img.style.width = "24px"; // Set a standard flag size
+                img.style.height = "16px"; // Maintain aspect ratio
+                img.style.pointerEvents = "none"; // Make it non-interactive
+
+                // Add the flag to the document
+                document.body.appendChild(img);
+        }else if(label === "DE") {
+            const flagUrl = await fetchCountryFlag("Germany");
+            if (flagUrl) {
+                const img = document.createElement("img");
+                img.src = flagUrl;
+                img.alt = "China";
+                img.style.position = "absolute";
+                img.style.left = `${x - 12}px`; // Adjust for centering
+                img.style.top = `${y - 12}px`; // Adjust for centering
+                img.style.width = "24px"; // Set a standard flag size
+                img.style.height = "16px"; // Maintain aspect ratio
+                img.style.pointerEvents = "none"; // Make it non-interactive
+
+                // Add the flag to the document
+                document.body.appendChild(img);
+        }else if(label === "BR") {
+            const flagUrl = await fetchCountryFlag("brazil");
+            if (flagUrl) {
+                const img = document.createElement("img");
+                img.src = flagUrl;
+                img.alt = "China";
+                img.style.position = "absolute";
+                img.style.left = `${x - 12}px`; // Adjust for centering
+                img.style.top = `${y - 12}px`; // Adjust for centering
+                img.style.width = "24px"; // Set a standard flag size
+                img.style.height = "16px"; // Maintain aspect ratio
+                img.style.pointerEvents = "none"; // Make it non-interactive
+
+                // Add the flag to the document
+                document.body.appendChild(img);
+        }else{
+	    // Create a location tag for other countries
             createLocationTag(x, y, label, true, "red");
-        }
+	}
     }
 }
 function createLocationTag(x, y, label, isPermanent = false, color = "none") {
