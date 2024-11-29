@@ -1899,6 +1899,17 @@ async function initializeDynamicLocationTags() {
         Japan: "Japan",     // Replace "Japan" with the actual country ID for Japan
         Australia: "Australia", // Replace "Australia" with the actual country ID for Australia
         SouthAmerica: "BR", // Replace "BR" with Brazil for South America
+        China: "CN",        // Replace "CN" with the actual country ID for China
+    };
+
+    // Map label to country names for flag fetching
+    const countryNameMap = {
+        USA: "United States",
+        Europe: "Germany",
+        Japan: "China",
+        Australia: "Australia",
+        SouthAmerica: "Brazil",
+        China: "China",
     };
 
     for (const [label, countryId] of Object.entries(targetLocations)) {
@@ -1910,73 +1921,29 @@ async function initializeDynamicLocationTags() {
         const x = bbox.left + bbox.width / 2; // Center horizontally
         const y = bbox.top + bbox.height / 2; // Center vertically
 
-        // Handle USA differently to display its flag
-        if (label === "USA") {
-            const flagUrl = await fetchCountryFlag("United States");
-            if (flagUrl) {
-                const img = document.createElement("img");
-                img.src = flagUrl;
-                img.alt = "USA Flag";
-                img.style.position = "absolute";
-                img.style.left = `${x - 12}px`; // Adjust for centering
-                img.style.top = `${y - 12}px`; // Adjust for centering
-                img.style.width = "24px"; // Set a standard flag size
-                img.style.height = "16px"; // Maintain aspect ratio
-                img.style.pointerEvents = "none"; // Make it non-interactive
+        // Fetch and display flags for specific countries
+        const flagUrl = await fetchCountryFlag(countryNameMap[label]);
+        if (flagUrl) {
+            const img = document.createElement("img");
+            img.src = flagUrl;
+            img.alt = `${label} Flag`;
+            img.style.position = "absolute";
+            img.style.left = `${x - 12}px`; // Adjust for centering
+            img.style.top = `${y - 12}px`; // Adjust for centering
+            img.style.width = "24px"; // Set a standard flag size
+            img.style.height = "16px"; // Maintain aspect ratio
+            img.style.pointerEvents = "none"; // Make it non-interactive
 
-                // Add the flag to the document
-                document.body.appendChild(img);
-        } else if(label === "China") {
-            const flagUrl = await fetchCountryFlag("China");
-            if (flagUrl) {
-                const img = document.createElement("img");
-                img.src = flagUrl;
-                img.alt = "China";
-                img.style.position = "absolute";
-                img.style.left = `${x - 12}px`; // Adjust for centering
-                img.style.top = `${y - 12}px`; // Adjust for centering
-                img.style.width = "24px"; // Set a standard flag size
-                img.style.height = "16px"; // Maintain aspect ratio
-                img.style.pointerEvents = "none"; // Make it non-interactive
+            // Add the flag to the document
+            document.body.appendChild(img);
+            continue; // Skip creating a location tag for these countries
+        }
 
-                // Add the flag to the document
-                document.body.appendChild(img);
-        }else if(label === "DE") {
-            const flagUrl = await fetchCountryFlag("Germany");
-            if (flagUrl) {
-                const img = document.createElement("img");
-                img.src = flagUrl;
-                img.alt = "China";
-                img.style.position = "absolute";
-                img.style.left = `${x - 12}px`; // Adjust for centering
-                img.style.top = `${y - 12}px`; // Adjust for centering
-                img.style.width = "24px"; // Set a standard flag size
-                img.style.height = "16px"; // Maintain aspect ratio
-                img.style.pointerEvents = "none"; // Make it non-interactive
-
-                // Add the flag to the document
-                document.body.appendChild(img);
-        }else if(label === "BR") {
-            const flagUrl = await fetchCountryFlag("brazil");
-            if (flagUrl) {
-                const img = document.createElement("img");
-                img.src = flagUrl;
-                img.alt = "China";
-                img.style.position = "absolute";
-                img.style.left = `${x - 12}px`; // Adjust for centering
-                img.style.top = `${y - 12}px`; // Adjust for centering
-                img.style.width = "24px"; // Set a standard flag size
-                img.style.height = "16px"; // Maintain aspect ratio
-                img.style.pointerEvents = "none"; // Make it non-interactive
-
-                // Add the flag to the document
-                document.body.appendChild(img);
-        }else{
-	    // Create a location tag for other countries
-            createLocationTag(x, y, label, true, "red");
-	}
+        // Create a location tag for other countries or if flag fetch fails
+        createLocationTag(x, y, label, true, "red");
     }
 }
+
 function createLocationTag(x, y, label, isPermanent = false, color = "none") {
     // Create container div for the tag
     const tag = document.createElement("div");
