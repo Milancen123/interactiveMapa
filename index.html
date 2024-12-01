@@ -166,7 +166,9 @@ font-family: 'Montserrat', sans-serif;
 	align-items:center;
 }
 
-
+#distance{
+padding:4px 0px;
+}
 #flags{
 
 	display:flex;
@@ -2192,7 +2194,7 @@ resetButton.addEventListener("click", () => {
     const startFlag = document.getElementById("start-flag");
     const endFlag = document.getElementById("end-flag");
     const arrow = document.getElementById("arrow");
-
+    distance.innerHTML = "";
     startFlag.style.display = "none"; // Hide start flag
     endFlag.style.display = "none";   // Hide end flag
     arrow.style.display = "none";     // Hide arrow
