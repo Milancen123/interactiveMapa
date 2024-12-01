@@ -1824,69 +1824,94 @@ async function fetchCountryFlag(countryName) {
 
 
 
-
-
-
 async function handleClick(countryId, event) {
     const pathElement = document.querySelector(`#${countryId}, .${countryId}`);
     if (!pathElement) return;
 
+    // Reset styles for all paths
     document.querySelectorAll("path").forEach(path => {
         path.style.stroke = "";
         path.style.strokeWidth = "";
     });
 
+    // Highlight paths for the selected country
     const countryPaths = getPathsByCountryId(countryId);
     countryPaths.forEach(path => {
         path.style.stroke = "#484848";
         path.style.strokeWidth = "2px";
     });
 
-    let countryName = pathElement.getAttribute("name") || pathElement.className.baseVal || pathElement.id || "Unknown Country";
+    // Get the country's name
+    let countryName = pathElement.getAttribute("name") || 
+                      pathElement.className.baseVal || 
+                      pathElement.id || 
+                      "Unknown Country";
 
     console.log(countryName);
 
     const { pageX: x, pageY: y } = event;
-    let flagURL = await fetchCountryFlag(countryName);
+    const flagURL = await fetchCountryFlag(countryName);
 
     const startFlag = document.getElementById("start-flag");
     const endFlag = document.getElementById("end-flag");
     const arrow = document.getElementById("arrow");
 
     if (!firstClick) {
+        // First click: Set start location
         firstClick = { x, y, countryName, flagURL };
-        createLocationTag(x, y, "", false, 'green');
-        startLocation.innerHTML = `<img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> ${countryName} <img src="${flagURL}" width="24px"/>`;
+        createLocationTag(x, y, "", false, "green");
+        startLocation.innerHTML = `
+            <img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> 
+            ${countryName} 
+            <img src="${flagURL}" width="24px"/>
+        `;
         placeholder.textContent = "Choose Your End Destination";
-flag_placeholder.style.display='block';
-        // Update start flag
+        flag_placeholder.style.display = "block";
         startFlag.src = flagURL;
         startFlag.style.display = "inline-block";
+        previousCountryID = countryId;
+
     } else if (!secondClick) {
+        // Second click: Set end location
         secondClick = { x, y, countryName, flagURL };
-        createLocationTag(x, y, "", false, 'red');
+        createLocationTag(x, y, "", false, "red");
         createLine(firstClick.x, firstClick.y, secondClick.x, secondClick.y);
-        endLocation.innerHTML = `<img src="crveni_tag.png" width="16px" id="zeleni_tag"/> ${countryName} <img src="${flagURL}" width="24px"/>`;
+        endLocation.innerHTML = `
+            <img src="crveni_tag.png" width="16px" id="zeleni_tag"/> 
+            ${countryName} 
+            <img src="${flagURL}" width="24px"/>
+        `;
         placeholder.textContent = "Choose a Destination";
-flag_placeholder.style.display='block';
-        // Update end flag and arrow
+        flag_placeholder.style.display = "block";
         endFlag.src = flagURL;
         endFlag.style.display = "inline-block";
         arrow.style.display = "inline-block";
-    } else {
-        resetDotsAndLine();
 
+        // Restore style for the previous country's paths
+        const previousCountryPaths = getPathsByCountryId(previousCountryID);
+        previousCountryPaths.forEach(path => {
+            path.style.stroke = "#484848";
+            path.style.strokeWidth = "2px";
+        });
+
+    } else {
+        // Reset selections and start over
+        resetDotsAndLine();
         firstClick = { x, y, countryName, flagURL };
         secondClick = null;
-        createLocationTag(x, y, "", false, 'green');
-        startLocation.innerHTML = `<img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> ${countryName} <img src="${flagURL}" width="24px"/>`;
-        endLocation.innerHTML = `<img src="crveni_tag.png" width="16px" id="zeleni_tag"/> None`;
+        createLocationTag(x, y, "", false, "green");
+        startLocation.innerHTML = `
+            <img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> 
+            ${countryName} 
+            <img src="${flagURL}" width="24px"/>
+        `;
+        endLocation.innerHTML = `
+            <img src="crveni_tag.png" width="16px" id="zeleni_tag"/> None
+        `;
         placeholder.textContent = "Choose Your End Destination";
-        initializeDynamicLocationTags();
-	flag_placeholder.style.display='block';
-        // Reset placeholder
+        flag_placeholder.style.display = "block";
         startFlag.src = flagURL;
-	startFlag.style.display = "inline-block";
+        startFlag.style.display = "inline-block";
         endFlag.style.display = "none";
         arrow.style.display = "none";
     }
