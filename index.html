@@ -1841,6 +1841,8 @@ async function handleClick(countryId, event) {
         path.style.strokeWidth = "2px";
     });
 
+
+
     // Get the country's name
     let countryName = pathElement.getAttribute("name") || 
                       pathElement.className.baseVal || 
@@ -1870,7 +1872,6 @@ async function handleClick(countryId, event) {
         startFlag.src = flagURL;
         startFlag.style.display = "inline-block";
         previousCountryID = countryId;
-
     } else if (!secondClick) {
         // Second click: Set end location
         secondClick = { x, y, countryName, flagURL };
@@ -1915,6 +1916,11 @@ async function handleClick(countryId, event) {
         endFlag.style.display = "none";
         arrow.style.display = "none";
 	previousCountryID = countryId;
+	     const previousCountryPaths = getPathsByCountryId(previousCountryID);
+        previousCountryPaths.forEach(path => {
+            path.style.stroke = "#484848";
+            path.style.strokeWidth = "2px";
+        });
     }
 }
 async function initializeDynamicLocationTags() {
@@ -1971,6 +1977,14 @@ async function initializeDynamicLocationTags() {
 
         // Create a location tag for other countries or if flag fetch fails
         createLocationTag(x, y, label, true, "red");
+	if(previousCountryID){
+	     const previousCountryPaths = getPathsByCountryId(previousCountryID);
+        previousCountryPaths.forEach(path => {
+            path.style.stroke = "#484848";
+            path.style.strokeWidth = "2px";
+        });
+}
+
     }
 }
 
