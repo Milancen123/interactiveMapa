@@ -159,8 +159,20 @@ font-family: 'Montserrat', sans-serif;
 	gap: 5px;
 	padding: 5px; 
 	border-radius: 5px; 
+	display:flex;
+	gap:5px;
+	flex-direction:column;
+	justify-content:center;
+	align-items:center;
 }
 
+
+#flags{
+
+	display:flex;
+	justify-content:center;
+        gap:5px;
+}
 	    	    @media (max-width: 768px) {
     .tooltip {
         font-size: 0.675rem; /* Smanjimo font na manjim ekranima */
@@ -172,6 +184,7 @@ top:0%;
 	}
 
 }
+
 
 
 @media (max-width: 480px) {
@@ -193,10 +206,13 @@ top:0%;
     <div class="map-container">
 <div id="tooltip" class="tooltip"></div>
 <div id="flag-placeholder" >
+    <div id="flags">
     <img id="start-flag" src="" alt="Start Flag" width="24" style="display: none;">
     <span id="arrow" style="font-size: 18px; display: none;">→</span>
     <img id="end-flag" src="" alt="End Flag" width="24" style="display: none;">
-    <span id="distance"></span>
+    </div>
+
+    <div id="distance"></div>
 
 </div>
 
@@ -2165,7 +2181,7 @@ resetButton.addEventListener("click", () => {
     startLocation.innerHTML = `<img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> None`;
     endLocation.innerHTML = `<img src="crveni_tag.png" width="16px" id="zeleni_tag"/> None`;
     placeholder.textContent = "Choose a Destination";
-    distance.innerHTML = "";
+
     // Remove red outlines from all countries
     document.querySelectorAll("path").forEach(path => {
         path.style.stroke = ""; // Reset stroke to default
