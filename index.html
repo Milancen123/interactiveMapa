@@ -168,6 +168,7 @@ font-family: 'Montserrat', sans-serif;
 
 #distance{
 padding:4px 0px;
+position:absolute;
 }
 #flags{
 
@@ -194,12 +195,10 @@ top:0%;
         font-size: 0.45rem; /* Još manji font za vrlo male ekrane */
         max-width: 50%; /* Dodatno ograničavanje širine */
     }
-
 	#flag-placeholder{
 		top:0%;
 		  right: 10%;
 	}
-
 }
 
     </style>
@@ -216,9 +215,9 @@ top:0%;
     <img id="end-flag" src="" alt="End Flag" width="24" style="display: none;">
     </div>
 
-    <div id="distance"></div>
-
 </div>
+
+   <div id="distance"></div>
 
 
         <?xml version="1.0"?>
@@ -2115,16 +2114,36 @@ function createLocationTag(x, y, label, isPermanent = false, color = "none") {
 // Initialize tags when the document is ready
 initializeDynamicLocationTags();
 
-
 function createLine(x1, y1, x2, y2) {
     lineElement = document.createElement("div");
     lineElement.classList.add("line");
+
     const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-    const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
+    let angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
+
+    // Set the line's width and rotation based on the calculated length and angle
     lineElement.style.width = `${length}px`;
     lineElement.style.transform = `rotate(${angle}deg)`;
     lineElement.style.left = `${x1}px`;
     lineElement.style.top = `${y1}px`;
+
+    // Position the distance placeholder in the middle of the line
+    const distance = document.getElementById('distance');
+    if (distance) {
+        // Calculate the midpoint between the two location tags
+        const midX = (x2 - x1) / 2;
+        const midY = (y2 - y1) / 2;
+        const newX = x1 + midX;
+        const newY = y1 + midY;
+	if(midX < 0){
+		angle += 180;
+	}
+        // Adjust the position of the distance element to be centered correctly
+        distance.style.left = `${newX - distance.offsetWidth / 2}px`;  // Adjust for the width of the placeholder
+        distance.style.top = `${newY - distance.offsetHeight / 2}px`;  // Adjust for the height of the placeholder
+        distance.style.transform = `rotate(${angle}deg)`;  // Ensure the placeholder is aligned with the line
+    }
+
     document.body.appendChild(lineElement);
 }
 
