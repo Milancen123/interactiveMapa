@@ -1948,7 +1948,7 @@ async function handleClick(countryId, event) {
         endFlag.style.display = "inline-block";
         arrow.style.display = "inline-block";
 	getDistanceBetweenCountries(previousCountryName, countryName).then((result)=>{
-		distance.innerHTML = `Distance is ${result}km`;
+		distance.innerHTML = `${result}km`;
 		
 	})
         // Restore style for the previous country's paths
