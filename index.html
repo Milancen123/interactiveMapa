@@ -1904,7 +1904,7 @@ async function getDistanceBetweenCountries(country1, country2) {
 
     const distance = calculateDistance(lat1, lon1, lat2, lon2);
     console.log(`The distance between ${country1} and ${country2} is ${distance.toFixed(2)} km`);
-return distance.toFixed(1);
+return distance.toFixed(0);
 }
 
 let previousCountryName = "";
@@ -2034,6 +2034,7 @@ async function initializeDynamicLocationTags() {
 	China:"China",
 	Zealand: "Zealand2",
 	England: "UK",
+	    Canada:"Canada",
     };
 
     // Map label to country names for flag fetching
@@ -2053,6 +2054,7 @@ async function initializeDynamicLocationTags() {
 	    Zealand: "New Zealand",
 	    	England: "United Kingdom",
 	    Europe:"France",
+	    Canada:"Canada",
     };
 
     for (const [label, countryId] of Object.entries(targetLocations)) {
