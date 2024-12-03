@@ -2133,7 +2133,12 @@ function createLocationTag(x, y, label, isPermanent = false, color = "none") {
     labelDiv.style.top = "26px"; // Below the marker
     labelDiv.style.left = "-6px"; // Center align with marker
     labelDiv.style.fontSize = "12px";
-    labelDiv.style.color = "red"; // Customize label text color
+	if(label === 'start'){
+		  labelDiv.style.color = "green"; // Customize label text color
+	}else{
+		  labelDiv.style.color = "red"; // Customize label text color
+	}
+  
     labelDiv.textContent = label;
 
     // Append SVG and label to the container
