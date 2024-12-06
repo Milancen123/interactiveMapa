@@ -1941,7 +1941,7 @@ async function handleClick(countryId, event) {
     if (!firstClick) {
         // First click: Set start location
         firstClick = { x, y, countryName, flag };
-        createLocationTag(x, y, "start", false, "green");
+        createLocationTag(x, y, "", false, "green");
         startLocation.innerHTML = `
             <img src="zeleni_tag.png" width="16px" id="zeleni_tag"/> 
             ${countryName} 
@@ -1956,7 +1956,7 @@ async function handleClick(countryId, event) {
     } else if (!secondClick) {
         // Second click: Set end location
         secondClick = { x, y, countryName, flag };
-        createLocationTag(x, y, "end", false, "red");
+        createLocationTag(x, y, "", false, "red");
         createLine(firstClick.x, firstClick.y, secondClick.x, secondClick.y);
         endLocation.innerHTML = `
             <img src="crveni_tag.png" width="16px" id="zeleni_tag"/> 
